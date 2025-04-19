@@ -36,7 +36,7 @@ FIXED_MESSAGES = [
     "Momentum’s notifications are lowkey my favorite part of the day.",
     "Just a random hi to all the Momentum fans in here!",
     "I’m loving the Momentum community — you guys rock!",
-    "Anyone else think Momentum should add more fun badges?",
+    "Anyone else think momentum should add more fun badges?",
     "Hey, let’s all share our Momentum progress — I’m at level 5!",
     "Not much to say, just wanted to spread some Momentum love!"
 ]
@@ -57,7 +57,6 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 # 打开 Discord 频道
 driver.get("https://discord.com/channels/948033443483254845/1027161980970205225")
 
-
 # 尝试加载 Cookies
 def load_cookies():
     if os.path.exists(COOKIES_PATH):
@@ -69,12 +68,10 @@ def load_cookies():
         return True
     return False
 
-
 # 保存 Cookies
 def save_cookies():
     pickle.dump(driver.get_cookies(), open(COOKIES_PATH, "wb"))
     print("已保存 Cookies")
-
 
 # 检查登录状态
 def check_login():
@@ -94,7 +91,6 @@ def check_login():
     except:
         print("未找到聊天输入框，可能未登录或页面未加载")
         return False
-
 
 # 登录 Discord
 if not load_cookies() or not check_login():
@@ -119,18 +115,19 @@ if not load_cookies() or not check_login():
         driver.quit()
         exit()
     save_cookies()
-    driver.quit()
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--window-size=1920,1080')
-    chrome_options.add_argument(
-        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36')
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.get("https://discord.com/channels/948033443483254845/1027161980970205225")
-    load_cookies()
-
+    # 移除此处的 driver.quit()
+    # 继续使用当前浏览器，无需重新启动 headless 浏览器
+    # driver.quit()
+    # chrome_options = Options()
+    # chrome_options.add_argument('--headless')
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--window-size=1920,1080')
+    # chrome_options.add_argument(
+    #     '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36')
+    # driver = webdriver.Chrome(service=service, options=chrome_options)
+    # driver.get("https://discord.com/channels/948033443483254845/1027161980970205225")
+    # load_cookies()
 
 def send_message(sentence):
     """发送消息到 Discord 聊天框"""
@@ -153,21 +150,19 @@ def send_message(sentence):
         driver.save_screenshot("send_error_screenshot.png")
         print("已保存页面截图到 send_error_screenshot.png")
 
-
 def main():
-    print("开始后台发送固定随机话语到 Momentum 的 general-chat 频道（每 5 分钟一次）...")
+    print("开始后台发送固定随机话语到 Momentum 的 general-chat 频道（每 3 分钟一次）...")
     last_check_time = datetime.now()
 
     while True:
         current_time = datetime.now()
-        # 每隔 5 分钟随机发送一条固定话语
-        if (current_time - last_check_time) >= timedelta(minutes=5):
+        # 每隔 3 分钟随机发送一条固定话语
+        if (current_time - last_check_time) >= timedelta(minutes=3):
             selected_sentence = random.choice(FIXED_MESSAGES)
             send_message(selected_sentence)
             last_check_time = current_time
 
         time.sleep(10)
-
 
 if __name__ == "__main__":
     try:
